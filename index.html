@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workspace grid view design</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        .container {
+            display: grid;
+            height: 90vh;
+        }
+
+        .thumb-container {
+            margin: 8px;
+        }
+
+        .thumb {
+            height: 100%;
+            width: 100%;
+        }
+
+        .content {
+            width: 100%;
+            height: 100%;
+            background: #DDD;
+        }
+    </style>
+</head>
+<body>
+    <div class="container"></div>
+    <input type="number" id="members" value="1">
+    
+    <script>
+        const container = document.querySelector('.container');
+        const input = document.querySelector('#members');
+
+        input.addEventListener('change', renderLayout);
+
+        function renderLayout(e) {
+            const members = e.target.value;
+            resetTiles();
+            applyGrid(members);
+            generateTiles(members);
+        }
+
+        function applyGrid(members) {
+            const columns = Math.ceil(Math.sqrt(members));
+            const rows = Math.ceil(members / columns);
+            container.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+            container.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+        }
+
+        function generateTiles(members) {
+            for(let i = 0; i < members; i++) {
+                createThumbnail(i);
+            }
+        }
+
+        function createThumbnail(i) {
+            const thumbnailContainer = document.createElement("DIV");
+            const thumbnail = document.createElement("DIV");
+            const content = document.createElement("DIV");
+            thumbnailContainer.classList.add('thumb-container');
+            thumbnail.classList.add('thumb');
+            content.classList.add('content');
+            thumbnailContainer.appendChild(thumbnail);
+            thumbnail.appendChild(content);
+            container.appendChild(thumbnailContainer);
+        }
+
+        function resetTiles() {
+            container.innerHTML = '';
+        }
+
+        function init() {
+            const members = parseInt(input.value);
+            if(members) {
+                applyGrid(members);
+                generateTiles(members);
+            }
+        }
+
+        init();
+
+    </script>
+</body>
+</html>
